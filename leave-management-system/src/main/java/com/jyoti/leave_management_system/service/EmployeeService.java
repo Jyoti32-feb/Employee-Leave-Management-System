@@ -28,6 +28,9 @@ public class EmployeeService {
         employee.setSalary(employeeRequest.getSalary());
         return employeeRepository.save(employee);
     }
+    public Employee getEmployeeById(long id) {
+        return employeeRepository.findById(id).orElseThrow(()->new RuntimeException("Employee not found with id: " + id));
+    }
 
 
 

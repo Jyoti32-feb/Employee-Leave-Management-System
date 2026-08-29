@@ -32,6 +32,11 @@ public class EmployeeController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(employee);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable long id) {
+        Employee employee = employeeService.getEmployeeById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(employee);
+    }
 
 
 
