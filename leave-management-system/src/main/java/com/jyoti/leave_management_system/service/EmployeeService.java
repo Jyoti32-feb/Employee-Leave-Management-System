@@ -2,6 +2,7 @@ package com.jyoti.leave_management_system.service;
 
 import com.jyoti.leave_management_system.dto.EmployeeRequest;
 import com.jyoti.leave_management_system.entity.Employee;
+import com.jyoti.leave_management_system.exception.EmployeeNotFoundException;
 import com.jyoti.leave_management_system.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +30,10 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
     public Employee getEmployeeById(long id) {
-        return employeeRepository.findById(id).orElseThrow(()->new RuntimeException("Employee not found with id: " + id));
+        return employeeRepository.findById(id).orElseThrow(()->new EmployeeNotFoundException("Employee not found with id: " + id));
     }
     public Employee updateEmployee(Long id,EmployeeRequest employeeRequest) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
         employee.setName(employeeRequest.getName());
         employee.setEmail(employeeRequest.getEmail());
         employee.setDeptName(employeeRequest.getDepartment());
@@ -41,7 +42,7 @@ public class EmployeeService {
         return employee;
     }
     public void deleteEmployee(long id) {
-        Employee employee = getEmployeeById(id);
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
         employeeRepository.delete(employee);
     }
 
