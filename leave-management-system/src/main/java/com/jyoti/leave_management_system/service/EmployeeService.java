@@ -31,6 +31,15 @@ public class EmployeeService {
     public Employee getEmployeeById(long id) {
         return employeeRepository.findById(id).orElseThrow(()->new RuntimeException("Employee not found with id: " + id));
     }
+    public Employee updateEmployee(Long id,EmployeeRequest employeeRequest) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+        employee.setName(employeeRequest.getName());
+        employee.setEmail(employeeRequest.getEmail());
+        employee.setDeptName(employeeRequest.getDepartment());
+        employee.setSalary(employeeRequest.getSalary());
+        employeeRepository.save(employee);
+        return employee;
+    }
 
 
 
