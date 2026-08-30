@@ -40,6 +40,10 @@ public class EmployeeService {
         employeeRepository.save(employee);
         return employee;
     }
+    public void deleteEmployee(long id) {
+        Employee employee = getEmployeeById(id);
+        employeeRepository.delete(employee);
+    }
 
 
 
