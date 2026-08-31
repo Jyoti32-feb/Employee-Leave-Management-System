@@ -1,0 +1,43 @@
+package com.jyoti.leave_management_system.service;
+
+import com.jyoti.leave_management_system.dto.LeaveRequestDto;
+import com.jyoti.leave_management_system.entity.Employee;
+import com.jyoti.leave_management_system.entity.LeaveRequest;
+import com.jyoti.leave_management_system.entity.LeaveStatus;
+import com.jyoti.leave_management_system.exception.EmployeeNotFoundException;
+import com.jyoti.leave_management_system.repository.EmployeeRepository;
+import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+
+@Service
+public class LeaveRequestService {
+    private final LeaveRequestRepository leaveRequestRepository;
+    public final EmployeeRepository employeeRepository;
+
+    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository, EmployeeRepository employeeRepository) {
+        this.leaveRequestRepository = leaveRequestRepository;
+        this.employeeRepository = employeeRepository;
+    }
+    public LeaveRequest applyLeave(LeaveRequestDto leaveRequestDto){
+        Employee employee = employeeRepository.findById(leaveRequestDto.getEmployeeId())
+                .orElseThrow(()->new EmployeeNotFoundException("Employee not found with id : "+leaveRequestDto.getEmployeeId()));
+
+        if(leaveRequestDto.getStartDate().isAfter(leaveRequestDto.getEndDate())){
+            throw new RuntimeException("Start date cannot be after end date");
+        }
+        LeaveRequest leaveRequest = new LeaveRequest();
+        leaveRequest.setEmployee(employee);
+        leaveRequest.setLeaveType(leaveRequestDto.getLeaveType());
+        leaveRequest.setStartDate(leaveRequestDto.getStartDate());
+        leaveRequest.setEndDate(leaveRequestDto.getEndDate());
+        leaveRequest.setReason(leaveRequestDto.getReason());
+
+        leaveRequest.setStatus(LeaveStatus.PENDING);
+        leaveRequest.setAppliedAt(LocalDate.now());
+
+        return leaveRequestRepository.save(leaveRequest);
+    }
+
+}
