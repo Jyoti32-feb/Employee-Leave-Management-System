@@ -6,6 +6,7 @@ import com.jyoti.leave_management_system.entity.LeaveRequest;
 import com.jyoti.leave_management_system.entity.LeaveStatus;
 import com.jyoti.leave_management_system.exception.EmployeeNotFoundException;
 import com.jyoti.leave_management_system.exception.InvalidLeaveDateException;
+import com.jyoti.leave_management_system.exception.LeaveNotFoundException;
 import com.jyoti.leave_management_system.exception.LeaveOverlapException;
 import com.jyoti.leave_management_system.repository.EmployeeRepository;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
@@ -58,6 +59,10 @@ public class LeaveRequestService {
 
     public List<LeaveRequest> getAllLeaveRequests(){
         return leaveRequestRepository.findAll();
+    }
+
+    public LeaveRequest getLeaveRequestById(Long id){
+        return leaveRequestRepository.findById(id).orElseThrow(()->new LeaveNotFoundException("Leave request not found with id:  + id"));
     }
 
 }

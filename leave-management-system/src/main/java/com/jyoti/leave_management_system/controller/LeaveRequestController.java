@@ -33,5 +33,11 @@ public class LeaveRequestController {
         List<LeaveRequest>leaveRequest=leaveRequestService.getAllLeaveRequests();
         return  ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LeaveRequest> getLeaveRequestById(@PathVariable Long id){
+        LeaveRequest leaveRequest=leaveRequestService.getLeaveRequestById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
+    }
 }
 

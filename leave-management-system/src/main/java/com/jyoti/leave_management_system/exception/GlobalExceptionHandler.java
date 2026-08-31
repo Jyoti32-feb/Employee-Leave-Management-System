@@ -30,4 +30,9 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse=new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+    @ExceptionHandler(LeaveNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLeaveNotFoundException(LeaveNotFoundException e) {
+        ErrorResponse errorResponse=new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 }
