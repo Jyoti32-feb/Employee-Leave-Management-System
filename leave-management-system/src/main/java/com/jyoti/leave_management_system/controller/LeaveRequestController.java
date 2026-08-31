@@ -39,5 +39,11 @@ public class LeaveRequestController {
         LeaveRequest leaveRequest=leaveRequestService.getLeaveRequestById(id);
         return ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
     }
+
+    @GetMapping("/employee/{id}")
+    public ResponseEntity<List<LeaveRequest>> getLeaveRequestByEmployeeId(@PathVariable Long id){
+        List<LeaveRequest>leaveRequest=leaveRequestService.getLeaveRequestsByEmployeeId(id);
+        return  ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
+    }
 }
 

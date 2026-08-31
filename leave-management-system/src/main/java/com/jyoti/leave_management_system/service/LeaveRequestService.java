@@ -65,4 +65,9 @@ public class LeaveRequestService {
         return leaveRequestRepository.findById(id).orElseThrow(()->new LeaveNotFoundException("Leave request not found with id:  + id"));
     }
 
+    public List<LeaveRequest> getLeaveRequestsByEmployeeId(Long employeeId){
+        employeeRepository.findById(employeeId).orElseThrow(()->new EmployeeNotFoundException("Employee not found with id : "+employeeId));
+        return leaveRequestRepository.findByEmployeeId(employeeId);
+    }
+
 }
