@@ -12,6 +12,7 @@ import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class LeaveRequestService {
@@ -53,6 +54,10 @@ public class LeaveRequestService {
         leaveRequest.setAppliedAt(LocalDate.now());
 
         return leaveRequestRepository.save(leaveRequest);
+    }
+
+    public List<LeaveRequest> getAllLeaveRequests(){
+        return leaveRequestRepository.findAll();
     }
 
 }
