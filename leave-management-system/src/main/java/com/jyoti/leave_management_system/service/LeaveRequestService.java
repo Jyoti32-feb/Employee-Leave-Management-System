@@ -70,4 +70,23 @@ public class LeaveRequestService {
         return leaveRequestRepository.findByEmployeeId(employeeId);
     }
 
+    public LeaveRequest updateLeaveStatus(Long id, LeaveStatus newStatus){
+        LeaveRequest leaveRequest = leaveRequestRepository.findById(id).
+                orElseThrow(()->new LeaveNotFoundException("Leave request not found with id:  "+ id));
+
+        if(leaveRequest.getStatus()!=LeaveStatus.PENDING){
+            throw new RuntimeException("Only pending leave requests can be approved or rejected");
+        }
+
+        if(newStatus!=LeaveStatus.APPROVED&&newStatus!=LeaveStatus.REJECTED){
+            throw new RuntimeException("Leave can only be approved or rejected");
+        }
+
+        leaveRequest.setStatus(newStatus);
+        return leaveRequestRepository.save(leaveRequest);
+
+
+
+    }
+
 }

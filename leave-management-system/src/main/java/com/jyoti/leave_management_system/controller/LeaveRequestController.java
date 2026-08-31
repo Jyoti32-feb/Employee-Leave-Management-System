@@ -1,6 +1,7 @@
 package com.jyoti.leave_management_system.controller;
 
 import com.jyoti.leave_management_system.dto.LeaveRequestDto;
+import com.jyoti.leave_management_system.dto.UpdateLeaveStatusDto;
 import com.jyoti.leave_management_system.entity.LeaveRequest;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
 import com.jyoti.leave_management_system.service.LeaveRequestService;
@@ -44,6 +45,11 @@ public class LeaveRequestController {
     public ResponseEntity<List<LeaveRequest>> getLeaveRequestByEmployeeId(@PathVariable Long id){
         List<LeaveRequest>leaveRequest=leaveRequestService.getLeaveRequestsByEmployeeId(id);
         return  ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
+    }
+    @PutMapping("{leaveid}/status")
+    public ResponseEntity<LeaveRequest> updateLeaveStatus(@PathVariable Long leaveid, @Valid @RequestBody UpdateLeaveStatusDto updateLeaveStatusDto){
+        LeaveRequest leaveRequest=leaveRequestService.updateLeaveStatus(leaveid,updateLeaveStatusDto.getStatus());
+        return ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
     }
 }
 
