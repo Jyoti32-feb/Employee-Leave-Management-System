@@ -79,11 +79,33 @@ public class LeaveRequestService {
             throw new InvalidLeaveStatusException("Leave can only be approved or rejected");
         }
 
+
         leaveRequest.setStatus(newStatus);
         return leaveRequestRepository.save(leaveRequest);
 
 
 
     }
+
+    public LeaveRequest cancelLeave(Long leaveId){
+        LeaveRequest leaveRequest = leaveRequestRepository
+                .findById(leaveId)
+                .orElseThrow(() ->
+                        new LeaveNotFoundException(
+                                "Leave request not found with id: " + leaveId
+                        )
+                );
+        if (leaveRequest.getStatus() != LeaveStatus.PENDING) {
+            throw new InvalidLeaveStatusException(
+                    "Only pending leave requests can be cancelled"
+            );
+        }
+
+        leaveRequest.setStatus(LeaveStatus.CANCELLED);
+
+        return leaveRequestRepository.save(leaveRequest);
+
+    }
+
 
 }

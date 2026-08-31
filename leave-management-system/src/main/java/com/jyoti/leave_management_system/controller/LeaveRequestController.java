@@ -51,5 +51,14 @@ public class LeaveRequestController {
         LeaveRequest leaveRequest=leaveRequestService.updateLeaveStatus(leaveid,updateLeaveStatusDto.getStatus());
         return ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
     }
+    @PutMapping("/{leaveId}/cancel")
+    public ResponseEntity<LeaveRequest> cancelLeave(
+            @PathVariable Long leaveId) {
+
+        LeaveRequest leaveRequest =
+                leaveRequestService.cancelLeave(leaveId);
+
+        return ResponseEntity.ok(leaveRequest);
+    }
 }
 
