@@ -4,10 +4,7 @@ import com.jyoti.leave_management_system.dto.LeaveRequestDto;
 import com.jyoti.leave_management_system.entity.Employee;
 import com.jyoti.leave_management_system.entity.LeaveRequest;
 import com.jyoti.leave_management_system.entity.LeaveStatus;
-import com.jyoti.leave_management_system.exception.EmployeeNotFoundException;
-import com.jyoti.leave_management_system.exception.InvalidLeaveDateException;
-import com.jyoti.leave_management_system.exception.LeaveNotFoundException;
-import com.jyoti.leave_management_system.exception.LeaveOverlapException;
+import com.jyoti.leave_management_system.exception.*;
 import com.jyoti.leave_management_system.repository.EmployeeRepository;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
 import org.springframework.stereotype.Service;
@@ -75,11 +72,11 @@ public class LeaveRequestService {
                 orElseThrow(()->new LeaveNotFoundException("Leave request not found with id:  "+ id));
 
         if(leaveRequest.getStatus()!=LeaveStatus.PENDING){
-            throw new RuntimeException("Only pending leave requests can be approved or rejected");
+            throw new InvalidLeaveStatusException("Only pending leave requests can be approved or rejected");
         }
 
         if(newStatus!=LeaveStatus.APPROVED&&newStatus!=LeaveStatus.REJECTED){
-            throw new RuntimeException("Leave can only be approved or rejected");
+            throw new InvalidLeaveStatusException("Leave can only be approved or rejected");
         }
 
         leaveRequest.setStatus(newStatus);
