@@ -28,6 +28,19 @@ public class LeaveRequestService {
         if(leaveRequestDto.getStartDate().isAfter(leaveRequestDto.getEndDate())){
             throw new InvalidLeaveDateException("Start date cannot be after end date");
         }
+        boolean overlappingLeave =
+                leaveRequestRepository
+                        .existsByEmployeeIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                                leaveRequestDto.getEmployeeId(),
+                                leaveRequestDto.getEndDate(),
+                                leaveRequestDto.getStartDate()
+                        );
+
+        if (overlappingLeave) {
+            throw new RuntimeException(
+                    "Employee already has a leave during this period"
+            );
+        }
         LeaveRequest leaveRequest = new LeaveRequest();
         leaveRequest.setEmployee(employee);
         leaveRequest.setLeaveType(leaveRequestDto.getLeaveType());
