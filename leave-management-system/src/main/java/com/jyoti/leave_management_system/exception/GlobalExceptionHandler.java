@@ -24,4 +24,10 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse=new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    @ExceptionHandler(LeaveOverlapException.class)
+    public ResponseEntity<ErrorResponse> handleLeaveOverlapException(LeaveOverlapException e) {
+        ErrorResponse errorResponse=new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 }

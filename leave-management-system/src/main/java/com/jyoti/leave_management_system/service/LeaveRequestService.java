@@ -6,6 +6,7 @@ import com.jyoti.leave_management_system.entity.LeaveRequest;
 import com.jyoti.leave_management_system.entity.LeaveStatus;
 import com.jyoti.leave_management_system.exception.EmployeeNotFoundException;
 import com.jyoti.leave_management_system.exception.InvalidLeaveDateException;
+import com.jyoti.leave_management_system.exception.LeaveOverlapException;
 import com.jyoti.leave_management_system.repository.EmployeeRepository;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class LeaveRequestService {
                         );
 
         if (overlappingLeave) {
-            throw new RuntimeException(
+            throw new LeaveOverlapException(
                     "Employee already has a leave during this period"
             );
         }
