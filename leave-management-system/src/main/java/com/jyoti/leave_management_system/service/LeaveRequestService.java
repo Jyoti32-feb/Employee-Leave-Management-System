@@ -5,6 +5,7 @@ import com.jyoti.leave_management_system.entity.Employee;
 import com.jyoti.leave_management_system.entity.LeaveRequest;
 import com.jyoti.leave_management_system.entity.LeaveStatus;
 import com.jyoti.leave_management_system.exception.EmployeeNotFoundException;
+import com.jyoti.leave_management_system.exception.InvalidLeaveDateException;
 import com.jyoti.leave_management_system.repository.EmployeeRepository;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class LeaveRequestService {
                 .orElseThrow(()->new EmployeeNotFoundException("Employee not found with id : "+leaveRequestDto.getEmployeeId()));
 
         if(leaveRequestDto.getStartDate().isAfter(leaveRequestDto.getEndDate())){
-            throw new RuntimeException("Start date cannot be after end date");
+            throw new InvalidLeaveDateException("Start date cannot be after end date");
         }
         LeaveRequest leaveRequest = new LeaveRequest();
         leaveRequest.setEmployee(employee);

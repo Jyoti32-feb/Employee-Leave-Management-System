@@ -19,4 +19,9 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse=new ErrorResponse(400,message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+    @ExceptionHandler(InvalidLeaveDateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidLeaveDateException(InvalidLeaveDateException e) {
+        ErrorResponse errorResponse=new ErrorResponse(HttpStatus.BAD_REQUEST.value(),e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 }
