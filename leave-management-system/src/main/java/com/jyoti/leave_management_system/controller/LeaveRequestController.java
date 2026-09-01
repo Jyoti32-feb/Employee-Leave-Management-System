@@ -4,6 +4,7 @@ import com.jyoti.leave_management_system.dto.LeaveRequestDto;
 import com.jyoti.leave_management_system.dto.LeaveResponseDto;
 import com.jyoti.leave_management_system.dto.UpdateLeaveStatusDto;
 import com.jyoti.leave_management_system.entity.LeaveRequest;
+import com.jyoti.leave_management_system.entity.LeaveStatus;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
 import com.jyoti.leave_management_system.service.LeaveRequestService;
 import jakarta.validation.Valid;
@@ -86,6 +87,16 @@ public class LeaveRequestController {
                 leaveRequestService.cancelLeave(leaveId);
 
         return ResponseEntity.ok(leaveResponse);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<LeaveResponseDto>> getLeavesByStatus(
+            @PathVariable LeaveStatus status) {
+
+        List<LeaveResponseDto> leaveRequests =
+                leaveRequestService.getLeavesByStatus(status);
+
+        return ResponseEntity.ok(leaveRequests);
     }
 }
 

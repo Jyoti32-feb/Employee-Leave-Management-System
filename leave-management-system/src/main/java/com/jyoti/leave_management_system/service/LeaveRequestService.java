@@ -166,5 +166,13 @@ public class LeaveRequestService {
         return responseDto;
     }
 
+    public List<LeaveResponseDto> getLeavesByStatus(LeaveStatus status) {
+
+        return leaveRequestRepository.findByStatus(status)
+                .stream()
+                .map(this::mapToResponseDto)
+                .toList();
+    }
+
 
 }
