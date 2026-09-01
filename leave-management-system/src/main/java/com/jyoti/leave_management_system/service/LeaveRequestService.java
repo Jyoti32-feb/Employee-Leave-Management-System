@@ -31,15 +31,19 @@ public class LeaveRequestService {
         }
         boolean overlappingLeave =
                 leaveRequestRepository
-                        .existsByEmployeeIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                        .existsByEmployeeIdAndStatusInAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                                 leaveRequestDto.getEmployeeId(),
+                                List.of(
+                                        LeaveStatus.PENDING,
+                                        LeaveStatus.APPROVED
+                                ),
                                 leaveRequestDto.getEndDate(),
                                 leaveRequestDto.getStartDate()
                         );
 
         if (overlappingLeave) {
             throw new LeaveOverlapException(
-                    "Employee already has a leave during this period"
+                    "Employee already has an active leave during this period"
             );
         }
         LeaveRequest leaveRequest = new LeaveRequest();
