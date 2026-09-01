@@ -1,6 +1,7 @@
 package com.jyoti.leave_management_system.service;
 
 import com.jyoti.leave_management_system.dto.LeaveRequestDto;
+import com.jyoti.leave_management_system.dto.LeaveResponseDto;
 import com.jyoti.leave_management_system.entity.Employee;
 import com.jyoti.leave_management_system.entity.LeaveRequest;
 import com.jyoti.leave_management_system.entity.LeaveStatus;
@@ -21,7 +22,7 @@ public class LeaveRequestService {
         this.leaveRequestRepository = leaveRequestRepository;
         this.employeeRepository = employeeRepository;
     }
-    public LeaveRequest applyLeave(LeaveRequestDto leaveRequestDto){
+    public LeaveResponseDto applyLeave(LeaveRequestDto leaveRequestDto){
         Employee employee = employeeRepository.findById(leaveRequestDto.getEmployeeId())
                 .orElseThrow(()->new EmployeeNotFoundException("Employee not found with id : "+leaveRequestDto.getEmployeeId()));
 
@@ -51,20 +52,45 @@ public class LeaveRequestService {
         leaveRequest.setStatus(LeaveStatus.PENDING);
         leaveRequest.setAppliedAt(LocalDate.now());
 
-        return leaveRequestRepository.save(leaveRequest);
+        LeaveRequest savedLeave =
+                leaveRequestRepository.save(leaveRequest);
+
+        return mapToResponseDto(savedLeave);
     }
 
-    public List<LeaveRequest> getAllLeaveRequests(){
-        return leaveRequestRepository.findAll();
+    public List<LeaveResponseDto> getAllLeaveRequests() {
+
+        return leaveRequestRepository.findAll()
+                .stream()
+                .map(this::mapToResponseDto)
+                .toList();
     }
 
-    public LeaveRequest getLeaveRequestById(Long id){
-        return leaveRequestRepository.findById(id).orElseThrow(()->new LeaveNotFoundException("Leave request not found with id:  + id"));
+    public LeaveResponseDto getLeaveRequestById(Long id) {
+
+        LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
+                .orElseThrow(() ->
+                        new LeaveNotFoundException(
+                                "Leave request not found with id: " + id
+                        )
+                );
+
+        return mapToResponseDto(leaveRequest);
     }
 
-    public List<LeaveRequest> getLeaveRequestsByEmployeeId(Long employeeId){
-        employeeRepository.findById(employeeId).orElseThrow(()->new EmployeeNotFoundException("Employee not found with id : "+employeeId));
-        return leaveRequestRepository.findByEmployeeId(employeeId);
+    public List<LeaveResponseDto> getLeavesByEmployeeId(Long employeeId) {
+
+        employeeRepository.findById(employeeId)
+                .orElseThrow(() ->
+                        new EmployeeNotFoundException(
+                                "Employee not found with id: " + employeeId
+                        )
+                );
+
+        return leaveRequestRepository.findByEmployeeId(employeeId)
+                .stream()
+                .map(this::mapToResponseDto)
+                .toList();
     }
 
     public LeaveRequest updateLeaveStatus(Long id, LeaveStatus newStatus){
@@ -105,6 +131,29 @@ public class LeaveRequestService {
 
         return leaveRequestRepository.save(leaveRequest);
 
+    }
+    private LeaveResponseDto mapToResponseDto(LeaveRequest leaveRequest) {
+
+        LeaveResponseDto responseDto = new LeaveResponseDto();
+
+        responseDto.setLeaveId(leaveRequest.getId());
+
+        responseDto.setEmployeeId(
+                leaveRequest.getEmployee().getId()
+        );
+
+        responseDto.setEmployeeName(
+                leaveRequest.getEmployee().getName()
+        );
+
+        responseDto.setLeaveType(leaveRequest.getLeaveType());
+        responseDto.setStartDate(leaveRequest.getStartDate());
+        responseDto.setEndDate(leaveRequest.getEndDate());
+        responseDto.setReason(leaveRequest.getReason());
+        responseDto.setStatus(leaveRequest.getStatus());
+        responseDto.setAppliedAt(leaveRequest.getAppliedAt());
+
+        return responseDto;
     }
 
 

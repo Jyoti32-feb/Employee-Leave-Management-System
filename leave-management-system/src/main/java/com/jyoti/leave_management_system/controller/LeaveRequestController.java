@@ -1,6 +1,7 @@
 package com.jyoti.leave_management_system.controller;
 
 import com.jyoti.leave_management_system.dto.LeaveRequestDto;
+import com.jyoti.leave_management_system.dto.LeaveResponseDto;
 import com.jyoti.leave_management_system.dto.UpdateLeaveStatusDto;
 import com.jyoti.leave_management_system.entity.LeaveRequest;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
@@ -23,28 +24,46 @@ public class LeaveRequestController {
         this.leaveRequestService = leaveRequestService;
     }
 
-    @PostMapping
-    public ResponseEntity<LeaveRequest> applyLeave(@Valid @RequestBody LeaveRequestDto leaveRequestDto) {
-        LeaveRequest leaveRequest = leaveRequestService.applyLeave(leaveRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(leaveRequest);
 
+    @PostMapping
+    public ResponseEntity<LeaveResponseDto> applyLeave(
+            @Valid @RequestBody LeaveRequestDto leaveRequestDto) {
+
+        LeaveResponseDto leaveResponse =
+                leaveRequestService.applyLeave(leaveRequestDto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(leaveResponse);
     }
+
     @GetMapping
-    public ResponseEntity<List<LeaveRequest>> getAllLeaveRequests(){
-        List<LeaveRequest>leaveRequest=leaveRequestService.getAllLeaveRequests();
-        return  ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
+    public ResponseEntity<List<LeaveResponseDto>> getAllLeaveRequests() {
+
+        List<LeaveResponseDto> leaveRequests =
+                leaveRequestService.getAllLeaveRequests();
+
+        return ResponseEntity.ok(leaveRequests);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LeaveRequest> getLeaveRequestById(@PathVariable Long id){
-        LeaveRequest leaveRequest=leaveRequestService.getLeaveRequestById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
+    public ResponseEntity<LeaveResponseDto> getLeaveRequestById(
+            @PathVariable Long id) {
+
+        LeaveResponseDto leaveResponse =
+                leaveRequestService.getLeaveRequestById(id);
+
+        return ResponseEntity.ok(leaveResponse);
     }
 
-    @GetMapping("/employee/{id}")
-    public ResponseEntity<List<LeaveRequest>> getLeaveRequestByEmployeeId(@PathVariable Long id){
-        List<LeaveRequest>leaveRequest=leaveRequestService.getLeaveRequestsByEmployeeId(id);
-        return  ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<LeaveResponseDto>> getLeavesByEmployeeId(
+            @PathVariable Long employeeId) {
+
+        List<LeaveResponseDto> leaveRequests =
+                leaveRequestService.getLeavesByEmployeeId(employeeId);
+
+        return ResponseEntity.ok(leaveRequests);
     }
     @PutMapping("{leaveid}/status")
     public ResponseEntity<LeaveRequest> updateLeaveStatus(@PathVariable Long leaveid, @Valid @RequestBody UpdateLeaveStatusDto updateLeaveStatusDto){
