@@ -65,19 +65,27 @@ public class LeaveRequestController {
 
         return ResponseEntity.ok(leaveRequests);
     }
-    @PutMapping("{leaveid}/status")
-    public ResponseEntity<LeaveRequest> updateLeaveStatus(@PathVariable Long leaveid, @Valid @RequestBody UpdateLeaveStatusDto updateLeaveStatusDto){
-        LeaveRequest leaveRequest=leaveRequestService.updateLeaveStatus(leaveid,updateLeaveStatusDto.getStatus());
-        return ResponseEntity.status(HttpStatus.OK).body(leaveRequest);
+    @PutMapping("/{leaveId}/status")
+    public ResponseEntity<LeaveResponseDto> updateLeaveStatus(
+            @PathVariable Long leaveId,
+            @Valid @RequestBody UpdateLeaveStatusDto statusDto) {
+
+        LeaveResponseDto leaveResponse =
+                leaveRequestService.updateLeaveStatus(
+                        leaveId,
+                        statusDto.getStatus()
+                );
+
+        return ResponseEntity.ok(leaveResponse);
     }
     @PutMapping("/{leaveId}/cancel")
-    public ResponseEntity<LeaveRequest> cancelLeave(
+    public ResponseEntity<LeaveResponseDto> cancelLeave(
             @PathVariable Long leaveId) {
 
-        LeaveRequest leaveRequest =
+        LeaveResponseDto leaveResponse =
                 leaveRequestService.cancelLeave(leaveId);
 
-        return ResponseEntity.ok(leaveRequest);
+        return ResponseEntity.ok(leaveResponse);
     }
 }
 

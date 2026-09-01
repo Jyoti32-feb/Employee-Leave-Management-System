@@ -93,7 +93,7 @@ public class LeaveRequestService {
                 .toList();
     }
 
-    public LeaveRequest updateLeaveStatus(Long id, LeaveStatus newStatus){
+    public LeaveResponseDto  updateLeaveStatus(Long id, LeaveStatus newStatus){
         LeaveRequest leaveRequest = leaveRequestRepository.findById(id).
                 orElseThrow(()->new LeaveNotFoundException("Leave request not found with id:  "+ id));
 
@@ -105,15 +105,18 @@ public class LeaveRequestService {
             throw new InvalidLeaveStatusException("Leave can only be approved or rejected");
         }
 
-
         leaveRequest.setStatus(newStatus);
-        return leaveRequestRepository.save(leaveRequest);
 
 
+        LeaveRequest updatedLeave =
+                leaveRequestRepository.save(leaveRequest);
+
+        return mapToResponseDto(updatedLeave);
 
     }
 
-    public LeaveRequest cancelLeave(Long leaveId){
+    public LeaveResponseDto cancelLeave(Long leaveId) {
+
         LeaveRequest leaveRequest = leaveRequestRepository
                 .findById(leaveId)
                 .orElseThrow(() ->
@@ -121,6 +124,7 @@ public class LeaveRequestService {
                                 "Leave request not found with id: " + leaveId
                         )
                 );
+
         if (leaveRequest.getStatus() != LeaveStatus.PENDING) {
             throw new InvalidLeaveStatusException(
                     "Only pending leave requests can be cancelled"
@@ -129,8 +133,10 @@ public class LeaveRequestService {
 
         leaveRequest.setStatus(LeaveStatus.CANCELLED);
 
-        return leaveRequestRepository.save(leaveRequest);
+        LeaveRequest updatedLeave =
+                leaveRequestRepository.save(leaveRequest);
 
+        return mapToResponseDto(updatedLeave);
     }
     private LeaveResponseDto mapToResponseDto(LeaveRequest leaveRequest) {
 
