@@ -8,7 +8,12 @@ import com.jyoti.leave_management_system.entity.LeaveStatus;
 import com.jyoti.leave_management_system.exception.*;
 import com.jyoti.leave_management_system.repository.EmployeeRepository;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -62,14 +67,22 @@ public class LeaveRequestService {
         return mapToResponseDto(savedLeave);
     }
 
-    public List<LeaveResponseDto> getAllLeaveRequests() {
+    public Page<LeaveResponseDto> getAllLeaveRequests(
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
 
-        return leaveRequestRepository.findAll()
-                .stream()
-                .map(this::mapToResponseDto)
-                .toList();
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable =
+                PageRequest.of(page, size, sort);
+
+        return leaveRequestRepository.findAll(pageable)
+                .map(this::mapToResponseDto);
     }
-
     public LeaveResponseDto getLeaveRequestById(Long id) {
 
         LeaveRequest leaveRequest = leaveRequestRepository.findById(id)

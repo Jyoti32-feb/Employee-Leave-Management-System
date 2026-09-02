@@ -8,6 +8,7 @@ import com.jyoti.leave_management_system.entity.LeaveStatus;
 import com.jyoti.leave_management_system.repository.LeaveRequestRepository;
 import com.jyoti.leave_management_system.service.LeaveRequestService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,10 +40,19 @@ public class LeaveRequestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LeaveResponseDto>> getAllLeaveRequests() {
+    public ResponseEntity<Page<LeaveResponseDto>> getAllLeaveRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
 
-        List<LeaveResponseDto> leaveRequests =
-                leaveRequestService.getAllLeaveRequests();
+        Page<LeaveResponseDto> leaveRequests =
+                leaveRequestService.getAllLeaveRequests(
+                        page,
+                        size,
+                        sortBy,
+                        direction
+                );
 
         return ResponseEntity.ok(leaveRequests);
     }
